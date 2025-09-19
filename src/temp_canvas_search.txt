@@ -1,1 +1,0 @@
-Searching for canvas element in GraphView.tsx
