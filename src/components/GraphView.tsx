@@ -119,9 +119,9 @@ export function GraphView({ searchQuery, onBack }: GraphViewProps) {
     researchTopics.forEach((topic, i) => {
       const year = 2012 + i * 2;
       const angle = (i / researchTopics.length) * 2 * Math.PI;
-      const radius = 600 + Math.random() * 700; // Much larger radius for main papers
-      const centerX = 1200; // Match simulation center
-      const centerY = 900;
+      const radius = 150 + Math.random() * 200; // Reduced radius to fit in viewport
+      const centerX = 800; // Canvas width/2 = 1600/2
+      const centerY = 450; // Canvas height/2 = 900/2
       
       mockPapers.push({
         id: (i + 1).toString(),
@@ -129,8 +129,8 @@ export function GraphView({ searchQuery, onBack }: GraphViewProps) {
         authors: [`Author${i + 1} et al.`],
         year,
         citations: Math.floor(20000 + Math.random() * 40000),
-        x: centerX + Math.cos(angle) * radius + (Math.random() - 0.5) * 400,
-        y: centerY + Math.sin(angle) * radius + (Math.random() - 0.5) * 400,
+        x: centerX + Math.cos(angle) * radius + (Math.random() - 0.5) * 100,
+        y: centerY + Math.sin(angle) * radius + (Math.random() - 0.5) * 100,
         vx: 0,
         vy: 0,
         connections: [],
@@ -158,9 +158,9 @@ export function GraphView({ searchQuery, onBack }: GraphViewProps) {
       }
 
       const angle = ((i + 5) / (additionalTopics.length + 5)) * 2 * Math.PI;
-      const radius = 400 + Math.random() * 900; // Much wider spread for additional papers
-      const centerX = 1200; // Match simulation center  
-      const centerY = 900;
+      const radius = 100 + Math.random() * 250; // Reduced radius to fit in viewport
+      const centerX = 800; // Canvas width/2 = 1600/2
+      const centerY = 450; // Canvas height/2 = 900/2
       
       mockPapers.push({
         id: (i + 6).toString(),
@@ -168,8 +168,8 @@ export function GraphView({ searchQuery, onBack }: GraphViewProps) {
         authors: [`Researcher${i + 1} et al.`],
         year: Math.floor(year),
         citations: Math.floor(Math.random() * 35000 + 500),
-        x: centerX + Math.cos(angle) * radius + (Math.random() - 0.5) * 600,
-        y: centerY + Math.sin(angle) * radius + (Math.random() - 0.5) * 600,
+        x: centerX + Math.cos(angle) * radius + (Math.random() - 0.5) * 150,
+        y: centerY + Math.sin(angle) * radius + (Math.random() - 0.5) * 150,
         vx: 0,
         vy: 0,
         connections: [],
@@ -233,7 +233,7 @@ export function GraphView({ searchQuery, onBack }: GraphViewProps) {
   }, []);
 
   const filteredPapers = useMemo(() => {
-    return papers.filter(paper => {
+    const filtered = papers.filter(paper => {
       if (paper.year < filters.dateRange[0] || paper.year > filters.dateRange[1]) return false;
       if ((paper.trustScore || 50) < filters.trustScore) return false; // Show papers with performance >= threshold
       if (filters.relationToSeed !== 'all') {
@@ -244,6 +244,7 @@ export function GraphView({ searchQuery, onBack }: GraphViewProps) {
       }
       return true;
     });
+    return filtered;
   }, [papers, filters]);
 
   const getFilteredConnections = useCallback((paper: Paper) => {
